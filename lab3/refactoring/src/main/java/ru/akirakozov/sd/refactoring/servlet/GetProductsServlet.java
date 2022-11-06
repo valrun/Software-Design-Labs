@@ -1,6 +1,5 @@
 package ru.akirakozov.sd.refactoring.servlet;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -9,25 +8,28 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import static ru.akirakozov.sd.refactoring.dao.productDao.*;
+import static ru.akirakozov.sd.refactoring.l10n.HttpMessage.*;
+
 /**
  * @author akirakozov
  */
-public class GetProductsServlet extends HttpServlet {
+public class GetProductsServlet extends CommonAbstractServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            try (Connection c = DriverManager.getConnection("jdbc:sqlite:test.db")) {
+            try (Connection c = DriverManager.getConnection(URL)) {
                 Statement stmt = c.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM PRODUCT");
-                response.getWriter().println("<html><body>");
+                ResultSet rs = stmt.executeQuery(QUERY_GET_ALL);
+                response.getWriter().println(OPEN_HTML_BODY);
 
                 while (rs.next()) {
-                    String  name = rs.getString("name");
-                    int price  = rs.getInt("price");
-                    response.getWriter().println(name + "\t" + price + "</br>");
+                    String  name = rs.getString(COLUMN_NAME);
+                    int price  = rs.getInt(COLUMN_PRICE);
+                    response.getWriter().println(getLineOfNamePrice(name, price));
                 }
-                response.getWriter().println("</body></html>");
+                response.getWriter().println(CLOSE_HTML_BODY);
 
                 rs.close();
                 stmt.close();
@@ -37,7 +39,7 @@ public class GetProductsServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-        response.setContentType("text/html");
+        response.setContentType(CONTENT_TYPE);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 }
