@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static ru.akirakozov.sd.refactoring.servlet.TestUtils.*;
 
 /**
  * @author valrun
@@ -30,8 +31,6 @@ public class AddProductServletTest {
     public void test() throws SQLException, IOException {
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
-        String sql = "INSERT INTO PRODUCT " +
-                "(NAME, PRICE) VALUES (\"1\",2)";
 
         Connection connection = mock(Connection.class);
         Statement statement = mock(Statement.class);
@@ -40,23 +39,21 @@ public class AddProductServletTest {
 
         try (MockedStatic<DriverManager> dummy = Mockito.mockStatic(DriverManager.class)) {
             dummy.when(() ->
-                    DriverManager.getConnection("jdbc:sqlite:test.db")).thenReturn(connection);
+                    DriverManager.getConnection(URL)).thenReturn(connection);
             when(connection.createStatement()).thenReturn(statement);
             when(response.getWriter()).thenReturn(writer);
-            when(request.getParameter("name")).thenReturn("1");
-            when(request.getParameter("price")).thenReturn("2");
+            when(request.getParameter(COLUMN_NAME)).thenReturn("1");
+            when(request.getParameter(COLUMN_PRICE)).thenReturn("2");
 
             final AddProductServlet servlet = new AddProductServlet();
             servlet.doGet(request, response);
 
-            assertEquals(
-                    "OK\n",
-                    stringWriter.toString());
+            assertEquals("OK\n", stringWriter.toString());
 
-            verify(statement).executeUpdate(sql);
+            verify(statement).executeUpdate(QUERY_INSERT);
             verify(statement).close();
             verify(response).setStatus(HttpServletResponse.SC_OK);
-            verify(response).setContentType("text/html");
+            verify(response).setContentType(CONTENT_TYPE);
         }
     }
 }

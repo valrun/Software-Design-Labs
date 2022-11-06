@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static ru.akirakozov.sd.refactoring.servlet.TestUtils.*;
 
 /**
  * @author valrun
@@ -39,19 +40,19 @@ public class GetProductsServletTest {
 
         try (MockedStatic<DriverManager> dummy = Mockito.mockStatic(DriverManager.class)) {
             dummy.when(() ->
-                    DriverManager.getConnection("jdbc:sqlite:test.db")).thenReturn(connection);
+                    DriverManager.getConnection(URL)).thenReturn(connection);
             when(connection.createStatement()).thenReturn(statement);
-            when(statement.executeQuery("SELECT * FROM PRODUCT")).thenReturn(resultSet);
+            when(statement.executeQuery(QUERY_GET_ALL)).thenReturn(resultSet);
             when(resultSet.next())
                     .thenReturn(true)
                     .thenReturn(true)
                     .thenReturn(true)
                     .thenReturn(false);
-            when(resultSet.getString("name"))
+            when(resultSet.getString(COLUMN_NAME))
                     .thenReturn("1")
                     .thenReturn("2")
                     .thenReturn("3");
-            when(resultSet.getInt("price"))
+            when(resultSet.getInt(COLUMN_PRICE))
                     .thenReturn(4)
                     .thenReturn(5)
                     .thenReturn(6);
@@ -71,7 +72,7 @@ public class GetProductsServletTest {
             verify(resultSet).close();
             verify(statement).close();
             verify(response).setStatus(HttpServletResponse.SC_OK);
-            verify(response).setContentType("text/html");
+            verify(response).setContentType(CONTENT_TYPE);
         }
     }
 }

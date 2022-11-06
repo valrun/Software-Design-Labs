@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static ru.akirakozov.sd.refactoring.servlet.TestUtils.*;
 
 /**
  * @author valrun
@@ -39,18 +40,18 @@ public class QueryServletTest {
 
         try (MockedStatic<DriverManager> dummy = Mockito.mockStatic(DriverManager.class)) {
             dummy.when(() ->
-                    DriverManager.getConnection("jdbc:sqlite:test.db")).thenReturn(connection);
+                    DriverManager.getConnection(URL)).thenReturn(connection);
             when(connection.createStatement()).thenReturn(statement);
-            when(statement.executeQuery("SELECT * FROM PRODUCT ORDER BY PRICE DESC LIMIT 1")).thenReturn(resultSet);
+            when(statement.executeQuery(QUERY_GET_MAX_PRICE)).thenReturn(resultSet);
             when(resultSet.next())
                     .thenReturn(true)
                     .thenReturn(false);
-            when(resultSet.getString("name"))
+            when(resultSet.getString(COLUMN_NAME))
                     .thenReturn("1");
-            when(resultSet.getInt("price"))
+            when(resultSet.getInt(COLUMN_PRICE))
                     .thenReturn(4);
             when(response.getWriter()).thenReturn(writer);
-            when(request.getParameter("command")).thenReturn("max");
+            when(request.getParameter(PARAMETER_COMMAND)).thenReturn("max");
 
             final QueryServlet servlet = new QueryServlet();
             servlet.doGet(request, response);
@@ -65,7 +66,7 @@ public class QueryServletTest {
             verify(resultSet).close();
             verify(statement).close();
             verify(response).setStatus(HttpServletResponse.SC_OK);
-            verify(response).setContentType("text/html");
+            verify(response).setContentType(CONTENT_TYPE);
         }
     }
 
@@ -82,18 +83,18 @@ public class QueryServletTest {
 
         try (MockedStatic<DriverManager> dummy = Mockito.mockStatic(DriverManager.class)) {
             dummy.when(() ->
-                    DriverManager.getConnection("jdbc:sqlite:test.db")).thenReturn(connection);
+                    DriverManager.getConnection(URL)).thenReturn(connection);
             when(connection.createStatement()).thenReturn(statement);
-            when(statement.executeQuery("SELECT * FROM PRODUCT ORDER BY PRICE LIMIT 1")).thenReturn(resultSet);
+            when(statement.executeQuery(QUERY_GET_MIN_PRICE)).thenReturn(resultSet);
             when(resultSet.next())
                     .thenReturn(true)
                     .thenReturn(false);
-            when(resultSet.getString("name"))
+            when(resultSet.getString(COLUMN_NAME))
                     .thenReturn("1");
-            when(resultSet.getInt("price"))
+            when(resultSet.getInt(COLUMN_PRICE))
                     .thenReturn(4);
             when(response.getWriter()).thenReturn(writer);
-            when(request.getParameter("command")).thenReturn("min");
+            when(request.getParameter(PARAMETER_COMMAND)).thenReturn("min");
 
             final QueryServlet servlet = new QueryServlet();
             servlet.doGet(request, response);
@@ -108,7 +109,7 @@ public class QueryServletTest {
             verify(resultSet).close();
             verify(statement).close();
             verify(response).setStatus(HttpServletResponse.SC_OK);
-            verify(response).setContentType("text/html");
+            verify(response).setContentType(CONTENT_TYPE);
         }
     }
 
@@ -125,16 +126,16 @@ public class QueryServletTest {
 
         try (MockedStatic<DriverManager> dummy = Mockito.mockStatic(DriverManager.class)) {
             dummy.when(() ->
-                    DriverManager.getConnection("jdbc:sqlite:test.db")).thenReturn(connection);
+                    DriverManager.getConnection(URL)).thenReturn(connection);
             when(connection.createStatement()).thenReturn(statement);
-            when(statement.executeQuery("SELECT SUM(price) FROM PRODUCT")).thenReturn(resultSet);
+            when(statement.executeQuery(QUERY_GET_SUM_PRICE)).thenReturn(resultSet);
             when(resultSet.next())
                     .thenReturn(true)
                     .thenReturn(false);
             when(resultSet.getInt(1))
                     .thenReturn(4);
             when(response.getWriter()).thenReturn(writer);
-            when(request.getParameter("command")).thenReturn("sum");
+            when(request.getParameter(PARAMETER_COMMAND)).thenReturn("sum");
 
             final QueryServlet servlet = new QueryServlet();
             servlet.doGet(request, response);
@@ -149,7 +150,7 @@ public class QueryServletTest {
             verify(resultSet).close();
             verify(statement).close();
             verify(response).setStatus(HttpServletResponse.SC_OK);
-            verify(response).setContentType("text/html");
+            verify(response).setContentType(CONTENT_TYPE);
         }
     }
 
@@ -166,16 +167,16 @@ public class QueryServletTest {
 
         try (MockedStatic<DriverManager> dummy = Mockito.mockStatic(DriverManager.class)) {
             dummy.when(() ->
-                    DriverManager.getConnection("jdbc:sqlite:test.db")).thenReturn(connection);
+                    DriverManager.getConnection(URL)).thenReturn(connection);
             when(connection.createStatement()).thenReturn(statement);
-            when(statement.executeQuery("SELECT COUNT(*) FROM PRODUCT")).thenReturn(resultSet);
+            when(statement.executeQuery(QUERY_COUNT_ALL)).thenReturn(resultSet);
             when(resultSet.next())
                     .thenReturn(true)
                     .thenReturn(false);
             when(resultSet.getInt(1))
                     .thenReturn(4);
             when(response.getWriter()).thenReturn(writer);
-            when(request.getParameter("command")).thenReturn("count");
+            when(request.getParameter(PARAMETER_COMMAND)).thenReturn("count");
 
             final QueryServlet servlet = new QueryServlet();
             servlet.doGet(request, response);
@@ -190,7 +191,7 @@ public class QueryServletTest {
             verify(resultSet).close();
             verify(statement).close();
             verify(response).setStatus(HttpServletResponse.SC_OK);
-            verify(response).setContentType("text/html");
+            verify(response).setContentType(CONTENT_TYPE);
         }
     }
 
@@ -203,7 +204,7 @@ public class QueryServletTest {
         HttpServletResponse response = mock(HttpServletResponse.class);
 
         when(response.getWriter()).thenReturn(writer);
-        when(request.getParameter("command")).thenReturn("any");
+        when(request.getParameter(PARAMETER_COMMAND)).thenReturn("any");
 
         final QueryServlet servlet = new QueryServlet();
         servlet.doGet(request, response);
@@ -213,6 +214,6 @@ public class QueryServletTest {
                 stringWriter.toString());
 
         verify(response).setStatus(HttpServletResponse.SC_OK);
-        verify(response).setContentType("text/html");
+        verify(response).setContentType(CONTENT_TYPE);
     }
 }
