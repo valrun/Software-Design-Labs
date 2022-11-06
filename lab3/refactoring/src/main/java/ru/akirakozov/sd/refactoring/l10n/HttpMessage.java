@@ -7,7 +7,7 @@ public class HttpMessage {
     private final static String CLOSE_HEAD = "</h1>";
 
     public final static String HEAD_PRODUCT_WITH_MAX_PRICE = OPEN_HEAD + "Product with max price: " + CLOSE_HEAD;
-    public final static String HEAD_PRODUCT_WITH_MIN_PRICE = OPEN_HEAD + "<h1>Product with min price: " + CLOSE_HEAD;
+    public final static String HEAD_PRODUCT_WITH_MIN_PRICE = OPEN_HEAD + "Product with min price: " + CLOSE_HEAD;
     public final static String TEXT_SUM_PRICE = "Summary price: ";
     public final static String TEXT_NUMBER_PRODUCTS  = "Number of products: ";
     public final static String TEXT_UNKNOWN_COMMAND  = "Unknown command: ";
