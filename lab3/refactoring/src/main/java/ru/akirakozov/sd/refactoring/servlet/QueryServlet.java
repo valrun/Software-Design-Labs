@@ -19,51 +19,29 @@ public class QueryServlet extends CommonAbstractServlet {
 
         if (Command.MAX.toString().equals(command)) {
             try {
-                String body = productDao.getMax()
-                        .stream()
-                        .map((entry) -> getLineOfNamePrice(entry.getKey(), entry.getValue()))
-                        .collect(Collectors.joining(System.getProperty("line.separator")));
-
-                response.getWriter().println(OPEN_HTML_BODY);
-                response.getWriter().println(HEAD_PRODUCT_WITH_MAX_PRICE);
-                response.getWriter().println(body);
-                response.getWriter().println(CLOSE_HTML_BODY);
+                response.getWriter().println(
+                        createHtml(HEAD_PRODUCT_WITH_MAX_PRICE, productDao.getMax()));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else if (Command.MIN.toString().equals(command)) {
             try {
-                String body = productDao.getMin()
-                        .stream()
-                        .map((entry) -> getLineOfNamePrice(entry.getKey(), entry.getValue()))
-                        .collect(Collectors.joining(System.getProperty("line.separator")));
-
-                response.getWriter().println(OPEN_HTML_BODY);
-                response.getWriter().println(HEAD_PRODUCT_WITH_MIN_PRICE);
-                response.getWriter().println(body);
-                response.getWriter().println(CLOSE_HTML_BODY);
+                response.getWriter().println(
+                        createHtml(HEAD_PRODUCT_WITH_MIN_PRICE, productDao.getMin()));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else if (Command.SUM.toString().equals(command)) {
             try {
-                String body = String.valueOf(productDao.getSum());
-
-                response.getWriter().println(OPEN_HTML_BODY);
-                response.getWriter().println(TEXT_SUM_PRICE);
-                response.getWriter().println(body);
-                response.getWriter().println(CLOSE_HTML_BODY);
+                response.getWriter().println(
+                        createHtml(TEXT_SUM_PRICE, String.valueOf(productDao.getSum())));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else if (Command.COUNT.toString().equals(command)) {
             try {
-                String body = String.valueOf(productDao.getCount());
-
-                response.getWriter().println(OPEN_HTML_BODY);
-                response.getWriter().println(TEXT_NUMBER_PRODUCTS);
-                response.getWriter().println(body);
-                response.getWriter().println(CLOSE_HTML_BODY);
+                response.getWriter().println(
+                        createHtml(TEXT_NUMBER_PRODUCTS, String.valueOf(productDao.getCount())));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

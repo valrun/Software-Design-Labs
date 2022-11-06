@@ -17,15 +17,7 @@ public class GetProductsServlet extends CommonAbstractServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            String body = productDao.getAll()
-                    .stream()
-                    .map((entry) -> getLineOfNamePrice(entry.getKey(), entry.getValue()))
-                    .collect(Collectors.joining(System.getProperty("line.separator")));
-
-            response.getWriter().println(OPEN_HTML_BODY);
-            response.getWriter().println(body);
-            response.getWriter().println(CLOSE_HTML_BODY);
-
+            response.getWriter().println(createHtml(productDao.getAll()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
