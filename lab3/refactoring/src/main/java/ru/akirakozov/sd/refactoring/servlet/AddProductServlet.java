@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static ru.akirakozov.sd.refactoring.dao.productDao.*;
+import static ru.akirakozov.sd.refactoring.dao.ProductDao.*;
 
 /**
  * @author akirakozov

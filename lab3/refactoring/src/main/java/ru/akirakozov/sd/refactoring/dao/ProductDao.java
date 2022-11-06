@@ -5,7 +5,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class productDao {
+public class ProductDao {
     final public static String URL = "jdbc:sqlite:test.db";
     final public static String COLUMN_NAME = "name";
     final public static String COLUMN_PRICE = "price";

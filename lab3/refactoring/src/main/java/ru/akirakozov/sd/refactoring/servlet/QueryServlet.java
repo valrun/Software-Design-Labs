@@ -1,6 +1,6 @@
 package ru.akirakozov.sd.refactoring.servlet;
 
-import ru.akirakozov.sd.refactoring.dao.productDao;
+import ru.akirakozov.sd.refactoring.dao.ProductDao;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,10 +22,10 @@ public class QueryServlet extends CommonAbstractServlet {
         } else {
             try {
                 String html = switch (Command.valueOf(command.toUpperCase())) {
-                    case MAX -> createHtml(HEAD_PRODUCT_WITH_MAX_PRICE, productDao.getMax());
-                    case MIN -> createHtml(HEAD_PRODUCT_WITH_MIN_PRICE, productDao.getMin());
-                    case SUM -> createHtml(TEXT_SUM_PRICE, String.valueOf(productDao.getSum()));
-                    case COUNT -> createHtml(TEXT_NUMBER_PRODUCTS, String.valueOf(productDao.getCount()));
+                    case MAX -> createHtml(HEAD_PRODUCT_WITH_MAX_PRICE, ProductDao.getMax());
+                    case MIN -> createHtml(HEAD_PRODUCT_WITH_MIN_PRICE, ProductDao.getMin());
+                    case SUM -> createHtml(TEXT_SUM_PRICE, String.valueOf(ProductDao.getSum()));
+                    case COUNT -> createHtml(TEXT_NUMBER_PRODUCTS, String.valueOf(ProductDao.getCount()));
                 };
                 response.getWriter().println(html);
             } catch (Exception e) {
