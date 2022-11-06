@@ -1,14 +1,12 @@
 package ru.akirakozov.sd.refactoring.servlet;
 
+import ru.akirakozov.sd.refactoring.dao.productDao;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.stream.Collectors;
 
-import static ru.akirakozov.sd.refactoring.dao.productDao.*;
 import static ru.akirakozov.sd.refactoring.l10n.HttpMessage.*;
 
 /**
@@ -21,85 +19,51 @@ public class QueryServlet extends CommonAbstractServlet {
 
         if (Command.MAX.toString().equals(command)) {
             try {
-                try (Connection c = DriverManager.getConnection(URL)) {
-                    Statement stmt = c.createStatement();
-                    ResultSet rs = stmt.executeQuery(QUERY_GET_MAX_PRICE);
-                    response.getWriter().println(OPEN_HTML_BODY);
-                    response.getWriter().println(HEAD_PRODUCT_WITH_MAX_PRICE);
+                String body = productDao.getMax()
+                        .stream()
+                        .map((entry) -> getLineOfNamePrice(entry.getKey(), entry.getValue()))
+                        .collect(Collectors.joining(System.getProperty("line.separator")));
 
-                    while (rs.next()) {
-                        String  name = rs.getString(COLUMN_NAME);
-                        int price  = rs.getInt(COLUMN_PRICE);
-                        response.getWriter().println(getLineOfNamePrice(name, price));
-                    }
-                    response.getWriter().println(CLOSE_HTML_BODY);
-
-                    rs.close();
-                    stmt.close();
-                }
-
+                response.getWriter().println(OPEN_HTML_BODY);
+                response.getWriter().println(HEAD_PRODUCT_WITH_MAX_PRICE);
+                response.getWriter().println(body);
+                response.getWriter().println(CLOSE_HTML_BODY);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else if (Command.MIN.toString().equals(command)) {
             try {
-                try (Connection c = DriverManager.getConnection(URL)) {
-                    Statement stmt = c.createStatement();
-                    ResultSet rs = stmt.executeQuery(QUERY_GET_MIN_PRICE);
-                    response.getWriter().println(OPEN_HTML_BODY);
-                    response.getWriter().println(HEAD_PRODUCT_WITH_MIN_PRICE);
+                String body = productDao.getMin()
+                        .stream()
+                        .map((entry) -> getLineOfNamePrice(entry.getKey(), entry.getValue()))
+                        .collect(Collectors.joining(System.getProperty("line.separator")));
 
-                    while (rs.next()) {
-                        String  name = rs.getString(COLUMN_NAME);
-                        int price  = rs.getInt(COLUMN_PRICE);
-                        response.getWriter().println(getLineOfNamePrice(name, price));
-                    }
-                    response.getWriter().println(CLOSE_HTML_BODY);
-
-                    rs.close();
-                    stmt.close();
-                }
-
+                response.getWriter().println(OPEN_HTML_BODY);
+                response.getWriter().println(HEAD_PRODUCT_WITH_MIN_PRICE);
+                response.getWriter().println(body);
+                response.getWriter().println(CLOSE_HTML_BODY);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else if (Command.SUM.toString().equals(command)) {
             try {
-                try (Connection c = DriverManager.getConnection(URL)) {
-                    Statement stmt = c.createStatement();
-                    ResultSet rs = stmt.executeQuery(QUERY_GET_SUM_PRICE);
-                    response.getWriter().println(OPEN_HTML_BODY);
-                    response.getWriter().println(TEXT_SUM_PRICE);
+                String body = String.valueOf(productDao.getSum());
 
-                    if (rs.next()) {
-                        response.getWriter().println(rs.getInt(1));
-                    }
-                    response.getWriter().println(CLOSE_HTML_BODY);
-
-                    rs.close();
-                    stmt.close();
-                }
-
+                response.getWriter().println(OPEN_HTML_BODY);
+                response.getWriter().println(TEXT_SUM_PRICE);
+                response.getWriter().println(body);
+                response.getWriter().println(CLOSE_HTML_BODY);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else if (Command.COUNT.toString().equals(command)) {
             try {
-                try (Connection c = DriverManager.getConnection(URL)) {
-                    Statement stmt = c.createStatement();
-                    ResultSet rs = stmt.executeQuery(QUERY_COUNT_ALL);
-                    response.getWriter().println(OPEN_HTML_BODY);
-                    response.getWriter().println(TEXT_NUMBER_PRODUCTS);
+                String body = String.valueOf(productDao.getCount());
 
-                    if (rs.next()) {
-                        response.getWriter().println(rs.getInt(1));
-                    }
-                    response.getWriter().println(CLOSE_HTML_BODY);
-
-                    rs.close();
-                    stmt.close();
-                }
-
+                response.getWriter().println(OPEN_HTML_BODY);
+                response.getWriter().println(TEXT_NUMBER_PRODUCTS);
+                response.getWriter().println(body);
+                response.getWriter().println(CLOSE_HTML_BODY);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
