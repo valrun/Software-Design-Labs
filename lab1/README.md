@@ -14,5 +14,5 @@ assertions. Класс необходимо покрыть тестами.
 * задание можно сдавать по почте, в теме письма указать [SD-TASK]
 
 ### Решение
-* [LRUCache](lab1/src/main/java/LRUCache.java)
-* [LRUCacheTest](lab1/src/test/java/LRUCacheTest.java)
+* [LRUCache](src/main/java/LRUCache.java)
+* [LRUCacheTest](src/test/java/LRUCacheTest.java)
