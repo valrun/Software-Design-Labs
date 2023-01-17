@@ -6,4 +6,9 @@ public interface Visitor {
     void visit(NumberToken token);
     void visit(Brace token);
     void visit(Operation token);
+
+    Object getResult();
+    static String getName() {
+        return "visitor";
+    }
 }
