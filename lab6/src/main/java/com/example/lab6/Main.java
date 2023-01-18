@@ -19,7 +19,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(ContextConfiguration.class);
-        System.err.println(String.join("   ", ctx.getBeanNamesForType(State.class)));
 
         Visitor parserVisitor = (Visitor) ctx.getBean(ParserVisitor.getName());
         Visitor printVisitor = (Visitor) ctx.getBean(PrintVisitor.getName());

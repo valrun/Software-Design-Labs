@@ -24,10 +24,12 @@ public class LoggingExecutionTimeAspect {
     Map<String, Long> allTime = new HashMap<>();
 
     public Object logExecutionTime(ProceedingJoinPoint joinPoint, String name) throws Throwable {
+        String methodName = joinPoint.getSignature().getName();
         long startNs = System.nanoTime();
         if (ProfileConfig.timeLogs.contains(name)) {
-            System.err.println(" ".repeat(prefix) + "Start method " + joinPoint.getSignature().getName()
-                    + " of state " + name);
+            System.err.println(" ".repeat(prefix)
+                    + "Start method " + methodName
+                    + " of " + name);
             prefix++;
         }
 
@@ -36,12 +38,14 @@ public class LoggingExecutionTimeAspect {
         long time = System.nanoTime() - startNs;
         if (ProfileConfig.timeLogs.contains(name)) {
             prefix--;
-            System.err.println(" ".repeat(prefix) + "Finish method " + joinPoint.getSignature().getName()
+            System.err.println(" ".repeat(prefix)
+                    + "Finish method " + methodName
+                    + " of " + name
                     + ", execution time in ns: " + time);
         }
 
-
         if (ProfileConfig.timeStat.contains(name)) {
+            name = name  + "." + methodName;
             if (!counter.containsKey(name)) {
                 counter.put(name, 0);
                 allTime.put(name, 0L);
@@ -97,13 +101,13 @@ public class LoggingExecutionTimeAspect {
     public void stat() {
         if (!ProfileConfig.timeStat.isEmpty()) {
             System.err.println("\nHow many times called:");
-            counter.forEach((name, time) -> System.err.println(name + ":\t" + time));
+            counter.forEach((name, time) -> System.err.println(name + ": " + time));
 
             System.err.println("\nCommon time in ns:");
-            allTime.forEach((name, time) -> System.err.println(name + ":\t" + time));
+            allTime.forEach((name, time) -> System.err.println(name + ": " + time));
 
             System.err.println("\nAverage time in ns:");
-            allTime.forEach((name, time) -> System.err.println(name + ":\t" + (time / counter.get(name))));
+            allTime.forEach((name, time) -> System.err.println(name + ": " + (time / counter.get(name))));
         }
     }
 }
